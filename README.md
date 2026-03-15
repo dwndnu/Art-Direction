@@ -8,13 +8,19 @@ Built for the **Creative Director / Art Director / Graphic Designer** workflow.
 
 ## Overview
 
-Four skills that work as a connected pipeline:
+Five skills that work as a connected pipeline, with two brief modes:
 
 ```
+FROM SCRATCH:
 /creative brief  →  /creative design  →  /creative deliver
      ↓                    ↓                     ↓
 CREATIVE-BRIEF.md    CREATIVE-STATE.md      CREATIVE-LOG.md
- (art direction)      (canva design ID)     (delivery record)
+
+FROM EXISTING VISUAL:
+/creative refine →  /creative design  →  /creative deliver
+     ↓                    ↓                     ↓
+CREATIVE-BRIEF         edits existing        CREATIVE-LOG.md
+  -refine.md           Canva design
 ```
 
 ---
@@ -53,6 +59,29 @@ What it produces:
 - **Copy Framework** — headline/body/CTA direction
 - **Success Criteria** — measurable metrics, not just vibes
 - **Visual References** — direct + lateral + anti-references
+
+---
+
+### `creative-refine` — Visual Analysis & Targeted Brief
+
+Analyzes an existing visual and produces a surgical brief focused only on what needs to change.
+
+```
+/creative refine <canva-url or image-file-path>
+```
+
+**Output:** `CREATIVE-BRIEF-[ProjectName]-refine.md`
+
+Handles three input types:
+- **Canva URL** — loads via MCP (`get-design`, `get-design-thumbnail`, `get-design-content`)
+- **Image file** — reads directly (Claude is multimodal — analyzes PNG/JPG/PDF as visual)
+- **Both** — treats Canva as editable source, image as reference or comparison
+
+What makes it different from a full brief:
+- Documents **what to keep** first — protects what has equity
+- **Critical fixes** vs **optional evolutions** — clear priority separation
+- Only researches areas being changed, not the full visual landscape
+- Execution path adapts: edit existing Canva design vs recreate from visual reference
 
 ---
 
@@ -99,10 +128,11 @@ Key behaviors:
 
 | Command | Description |
 |---------|-------------|
-| `/creative campaign <topic>` | Full end-to-end workflow |
-| `/creative brief <topic/brand/url>` | Research + creative brief only |
-| `/creative design [brief-file]` | Canva design execution only |
-| `/creative deliver <email>` | Export + email delivery only |
+| `/creative campaign <topic>` | Full end-to-end from scratch |
+| `/creative brief <topic/brand/url>` | Create from scratch: research + full brief |
+| `/creative refine <canva-url or file>` | Refine existing visual: analyze → targeted brief |
+| `/creative design [brief-file]` | Execute brief in Canva |
+| `/creative deliver <email>` | Export + email delivery |
 | `/creative inspect <canva-url>` | Art direction review of existing design |
 | `/creative resize <canva-url> <format>` | Adapt design to new format |
 | `/creative image <prompt>` | Generate image via FLUX + optional Canva upload |
@@ -113,7 +143,8 @@ Key behaviors:
 
 | File | Created by | Purpose |
 |------|-----------|---------|
-| `CREATIVE-BRIEF-[Name].md` | `creative-brief` | Art direction source of truth |
+| `CREATIVE-BRIEF-[Name].md` | `creative-brief` | Full brief from scratch |
+| `CREATIVE-BRIEF-[Name]-refine.md` | `creative-refine` | Targeted brief for existing visual |
 | `CREATIVE-STATE.md` | `creative-design` | Canva design ID + version state |
 | `CREATIVE-LOG.md` | `creative-deliver` | Delivery history + revision log |
 | `AD-NOTES-[Name].md` | `/creative inspect` | Art direction notes on existing design |
@@ -142,6 +173,8 @@ Copy the skill folders into your Claude Code skills directory:
 ├── creative/
 │   └── SKILL.md
 ├── creative-brief/
+│   └── SKILL.md
+├── creative-refine/
 │   └── SKILL.md
 ├── creative-design/
 │   └── SKILL.md

@@ -11,6 +11,7 @@ Your job is to orchestrate end-to-end visual content production — from researc
 Activate this skill when the user invokes any of these commands:
 - `/creative campaign <topic>`
 - `/creative brief <topic/brand/url>`
+- `/creative refine <input>` (Canva URL or image file path)
 - `/creative design [brief-file]`
 - `/creative deliver <email>`
 - `/creative inspect <canva-url>`
@@ -23,13 +24,29 @@ Activate this skill when the user invokes any of these commands:
 
 | Command | Description | Output |
 |---------|-------------|--------|
-| `/creative campaign <topic>` | Full end-to-end: research → brief → design → deliver | All files + email |
-| `/creative brief <topic/brand>` | Research + creative brief only | CREATIVE-BRIEF-[ProjectName].md |
+| `/creative campaign <topic>` | Full end-to-end from scratch: research → brief → design → deliver | All files + email |
+| `/creative brief <topic/brand>` | Create from scratch: research + full visual system brief | CREATIVE-BRIEF-[ProjectName].md |
+| `/creative refine <input>` | Refine existing visual: analyze → targeted brief → revise design | CREATIVE-BRIEF-[ProjectName]-refine.md |
 | `/creative design [brief-file]` | Execute design in Canva from brief | Canva design link + CREATIVE-STATE.md |
 | `/creative deliver <email>` | Set sharing permissions + send via Gmail | Email sent confirmation |
 | `/creative inspect <canva-url>` | Analyze existing Canva design, give art direction notes | AD-NOTES-[ProjectName].md |
 | `/creative resize <canva-url> <format>` | Resize existing design to new format | Canva design link |
 | `/creative image <prompt>` | Generate standalone image via FLUX | Image URL + optional Canva upload |
+
+---
+
+## Brief Mode: Scratch vs Refine
+
+Two distinct brief modes with different research depth and output focus:
+
+| | `/creative brief` (Scratch) | `/creative refine` (Refine) |
+|--|----------------------------|----------------------------|
+| **Starting point** | No visual exists | Existing visual provided |
+| **Input** | Topic / brand / URL | Canva URL or image file path |
+| **Research depth** | Full: landscape, trends, competitors, territory | Narrow: only areas being changed |
+| **FLUX usage** | Concept sketch at end of brief | Only if imagery needs replacement |
+| **Brief focus** | Build complete visual system from zero | Keep X / Change Y / Evolve toward Z |
+| **Sub-skill** | `creative-brief` | `creative-refine` |
 
 ---
 
@@ -57,6 +74,7 @@ Runs all phases **sequentially with confirmation gates**:
 ### Individual Commands
 Route directly to the corresponding sub-skill:
 - `/creative brief` → `creative-brief/SKILL.md`
+- `/creative refine` → `creative-refine/SKILL.md`
 - `/creative design` → `creative-design/SKILL.md`
 - `/creative deliver` → `creative-deliver/SKILL.md`
 
