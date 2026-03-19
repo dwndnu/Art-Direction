@@ -30,6 +30,7 @@ If the input contains a Canva URL:
 3. Use `get-design-pages` to understand structure (single page or multi-page)
 4. Use `get-design-content` to retrieve element inventory (text, colors, images, shapes)
 5. Use `get-design-thumbnail` to get a visual preview — **this is your primary evaluation tool**
+   > ⚠️ *Thumbnail limitation: `get-design-thumbnail` occasionally redirects to an auth-gated CDN URL that the Read tool cannot access. If this happens, share the design URL directly with the user and ask them to open it in browser for visual review. Continue assessment using `get-design-content` for structural data.*
 
 ### Case B — Image File
 
@@ -179,9 +180,9 @@ If none of the identified issues require external research → skip this phase e
 
 Write a targeted brief that is structured around changes, not a complete visual system rebuild.
 
-**File name:** `CREATIVE-BRIEF-[ProjectName]-refine.md`
+**File name:** `CREATIVE-BRIEF-[ProjectName]-refine-v1.md`
 
-If a previous version exists (`-refine-v1.md`): create `-refine-v2.md`. Never overwrite.
+If a previous version exists (`-refine-v1.md`): create `-refine-v2.md`. Never overwrite. Versioning always starts at v1.
 
 ```markdown
 # Creative Refine Brief: [Project Name]
@@ -223,7 +224,7 @@ If a previous version exists (`-refine-v1.md`): create `-refine-v2.md`. Never ov
 [Exact revised copy for any text elements being changed]
 
 ## Imagery Adjustments (if any)
-[Direction for new/replacement imagery — and whether FLUX generation is needed]
+[Direction for new/replacement imagery — specify generator preference: FLUX (fastest, built-in), NanoBanana 2 (photorealistic editorial), Midjourney (highest quality), ChatGPT/DALL-E 4 (iterative), Firefly (commercial-safe), or manual. Full prompt guidance → creative-design/SKILL.md Section 3.4]
 
 ## Format/Platform Compliance (if any)
 [Spec corrections — safe zones, sizing, platform requirements]

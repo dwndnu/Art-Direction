@@ -66,6 +66,20 @@ COPY TO INCLUDE:
 IMAGERY: [description of image type needed]
 ```
 
+### 1.3 Hero Image Decision Gate
+
+**Before opening Canva:** evaluate the IMAGERY field.
+
+If the brief requires **custom photography, editorial imagery, or a hero visual** (not just icons or text):
+- Do NOT generate in Canva first — Canva AI cannot reliably execute specific art direction
+- Complete **Section 3.4 Steps 1 and 2** now (art direction concept + image generation/sourcing)
+- Return here after the hero image is confirmed, then continue to Phase 2
+
+If imagery is generic/decorative (icons, abstract backgrounds, simple patterns):
+- Continue to Phase 2 — use Canva stock or AI generation inline
+
+If imagery source is unclear from the brief → ask: *"Does this design need a custom hero image, or is stock photography/generic visuals acceptable?"*
+
 ---
 
 ## Phase 2: Canva Setup
@@ -176,11 +190,13 @@ When corrections are needed:
 
 **Core principle:** Always establish the hero visual BEFORE attempting to build the full layout in Canva. Canva AI `generate-design` cannot reliably handle both image generation and layout execution in one step — the results are unpredictable and rarely match editorial direction.
 
-**Correct workflow:**
-1. Define art direction concept first (what the image should communicate)
-2. Generate or source the hero image
-3. Upload to Canva
-4. Build layout around the image via editing operations
+**Execution order:**
+- **Steps 1–2** (art direction + generate/source) → done during Phase 1.3, BEFORE opening Canva
+- **Steps 3–4** (upload + build layout) → done here, after Canva design is set up
+
+**Steps 1–2 summary:**
+1. Define art direction concept (what the image communicates)
+2. Generate or source the hero image using chosen generator
 
 #### Step 1: Art Direction Concept
 
@@ -555,7 +571,7 @@ Next steps:
 
 ## Creative Decision Log
 
-For every decision not explicitly in the brief, document:
+For every decision not explicitly in the brief, document it using this format. These decisions are **surfaced inline in the DESIGN COMPLETE output** under "Creative Decisions Made" — you do not need to create a separate file.
 
 ```
 DECISION: [what was chosen]

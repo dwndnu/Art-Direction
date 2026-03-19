@@ -175,9 +175,20 @@ Send this email? [Y / N / Edit]
 
 ### 3.2 Send
 
-After user confirms → use `gmail_create_draft` to create the draft, then if sending is confirmed, proceed to send via available Gmail tools.
+> ⚠️ **Gmail MCP limitation:** The available Gmail tools support **draft creation only** — there is no direct send tool. After confirmation, the workflow creates a draft. The user must open Gmail and send manually.
 
-If only draft creation is available → save as draft and tell user: "Draft saved — open Gmail to review and send."
+After user confirms → use `gmail_create_draft` to create the draft.
+
+Always tell the user explicitly:
+```
+Draft saved to Gmail.
+Subject: [subject line]
+To: [recipient]
+
+Open Gmail to review and send. The draft is ready.
+```
+
+Do NOT say "sent" — it was not sent. Do NOT imply automatic sending is possible.
 
 ### 3.3 Delivery Confirmation
 

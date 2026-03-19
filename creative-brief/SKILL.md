@@ -14,6 +14,23 @@ The user runs `/creative brief <topic/brand/url>`. Research the subject, analyze
 
 ---
 
+## Phase 0: Pre-Research Check
+
+Before starting research, check for existing files in the working directory:
+- **`BRAND-VOICE.md`** (from `/market brand`) → read it. Extract brand voice, colors, typography. Do not re-research what's already documented.
+- **`CREATIVE-BRIEF-[ProjectName].md`** → if one already exists for this project, read it and confirm with user: "A brief for this project already exists. Are we revising it (v2) or starting a new direction?"
+- **`CREATIVE-STATE.md`** → if design work is already in progress, note the current status and flag it to user
+
+**If user provides a Canva URL or image file and asks to "create a brief from this" (not refine it):**
+- This is a **reverse brief** — extract brief parameters FROM the existing visual, not from scratch research
+- Read the design (via `get-design-content` + `get-design-thumbnail` for Canva URL, or Read tool for image file)
+- Infer: color palette, typography style, layout logic, tone, target audience, key message
+- Fill in the standard brief format based on what you observe
+- Note in the brief: *"Parameters inferred from existing design — validate with brand owner before use"*
+- Skip Phase 1 research (landscape, competitors) unless user asks for it
+
+---
+
 ## Phase 1: Research
 
 ### 1.1 Subject Analysis
@@ -55,6 +72,8 @@ Categorize your references:
 - **2-3 Direct inspiration** — same category, strong execution. What to borrow and why.
 - **2-3 Lateral references** — different category, transferable aesthetic. What principle translates.
 - **1-2 Anti-references** — what this should NOT look like. Name the cliché explicitly.
+
+**If WebSearch returns no useful visual URLs:** describe the reference verbally from the text content found (brand name, general style direction, key visual characteristics). Do NOT fabricate specific campaign names, image URLs, or visual details you haven't seen. Note: *"Reference described from text — no direct visual URL available."* A verbally described reference is better than a fabricated one.
 
 **Note on image generation:** If the user wants a generated concept image to accompany the brief, offer the multi-generator options from `/creative image` (FLUX via HuggingFace MCP is the fastest built-in option; NanoBanana 2, Midjourney, ChatGPT, or Firefly for higher precision). This serves as a rough "concept visualization" — not final art, but direction-setting. Full generator comparison and prompt best practices → `creative-design/SKILL.md` Section 3.4.
 

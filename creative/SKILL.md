@@ -61,7 +61,10 @@ Runs all phases **sequentially with confirmation gates**:
 1. **Phase 1** → Sub-skill: `creative-brief`
    - Output: `CREATIVE-BRIEF-[ProjectName].md`
    - **GATE: Show brief summary to user. Ask: "Approve brief and proceed to design? [Y/N/edit]"**
-   - Do NOT proceed to Phase 2 without explicit approval.
+   - If **Y**: proceed to Phase 2
+   - If **N**: stop. Ask what direction to take instead.
+   - If **edit**: ask *"What specifically needs to change?"* → update the brief file → re-present the 5-7 bullet summary → ask again
+   - Do NOT proceed to Phase 2 without explicit Y.
 
 2. **Phase 2** → Sub-skill: `creative-design`
    - Input: reads `CREATIVE-BRIEF-[ProjectName].md` + creates `CREATIVE-STATE.md`
@@ -186,29 +189,9 @@ Be direct. If there is a gap between what was intended and what was achieved, na
 
 ## State Management: CREATIVE-STATE.md
 
-The `creative-design` sub-skill creates and maintains `CREATIVE-STATE.md` in the current directory to pass context between phases. Format:
+The `creative-design` sub-skill creates and maintains `CREATIVE-STATE.md` in the current directory to pass context between phases. The `creative-deliver` sub-skill reads it to locate the design without asking the user to repeat it.
 
-```markdown
-# Creative State
-**Project:** [ProjectName]
-**Date:** [date]
-**Brief File:** CREATIVE-BRIEF-[ProjectName].md
-
-## Canva Design
-**Design ID:** [canva design id]
-**Design URL:** [canva url]
-**Primary Format:** [format name, dimensions]
-**Status:** [draft / approved / delivered]
-
-## Additional Formats
-- [format name]: [canva url or "pending"]
-
-## Version
-**Current Version:** v[n]
-**Previous Versions:** [list of previous design IDs if revised]
-```
-
-The `creative-deliver` sub-skill reads `CREATIVE-STATE.md` to locate the design without asking the user to repeat it.
+**Format and field definitions** → `creative-design/SKILL.md` Phase 5.1 (single source of truth — do not duplicate here).
 
 ---
 
