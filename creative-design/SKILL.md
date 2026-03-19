@@ -165,25 +165,296 @@ When corrections are needed:
 
 **If editing is too complex or fails repeatedly:** it may be faster to regenerate with an improved prompt than to fight the editor. Use your judgment.
 
-### 3.4 Image/Asset Handling
+### 3.4 Visual Asset Strategy — Image-First Workflow
 
-The brief's imagery direction requires actual images. Options:
+**Core principle:** Always establish the hero visual BEFORE attempting to build the full layout in Canva. Canva AI `generate-design` cannot reliably handle both image generation and layout execution in one step — the results are unpredictable and rarely match editorial direction.
 
-**Option A — FLUX generation (recommended for concept/campaign imagery):**
-1. Use `gr1_flux_1_kontext_dev_infer` with a detailed prompt matching the brief's imagery direction
-2. The tool returns an image URL
-3. Upload to Canva with `upload-asset-from-url`
-4. Note the returned asset ID for use in design
+**Correct workflow:**
+1. Define art direction concept first (what the image should communicate)
+2. Generate or source the hero image
+3. Upload to Canva
+4. Build layout around the image via editing operations
 
-**Option B — Canva stock/assets:**
-- Canva has built-in stock photos accessible through the design interface
-- If using Canva-native images: describe the image style and let Canva's AI suggest
+#### Step 1: Art Direction Concept
 
-**Option C — External URL:**
-- If the user provides an image URL: `upload-asset-from-url` directly
-- Return the asset ID for placement
+Before generating anything, articulate:
+- What subject/scene (close-up skin, product on surface, person in context — be specific)
+- Mood and lighting (dramatic side light, soft diffused, clinical-warm)
+- Background treatment (white studio, blurred neutral, environmental)
+- What is explicitly absent (no devices, no text in image, no props)
+- Aspect ratio / crop intention
 
-**For placeholder scenarios:** If imagery can't be sourced in this session, mark the image area clearly and note in design summary what image should go there and why.
+#### Step 2: Image Generation Options
+
+Present to user — do not auto-choose:
+
+**Option A — Generate in Canva AI**
+> ⚠️ *Disclaimer: Canva AI image generation is non-deterministic. It may ignore specific art direction, lighting, and composition requests. Acceptable for quick exploration, not reliable for precision editorial output.*
+- Use `generate-design` with detailed visual description embedded in the query
+- Evaluate thumbnail immediately — if off-direction, do not iterate more than once
+
+**Option B — External image generator (recommended for precise editorial direction)**
+
+Quick comparison:
+
+| Generator | Best for | Speed | Max res | Notes |
+|-----------|---------|-------|---------|-------|
+| **NanoBanana 2** | Photorealistic editorial | Fast | 1024×1792 | Gemini 3.1 Flash via OpenRouter. Run locally. |
+| **FLUX (HuggingFace MCP)** | Concept/campaign, fast iteration | Very fast | 1024px | Built into this workflow. No external tool needed. |
+| **Midjourney v7** | Highest quality ceiling, cinematic | Moderate | Unconstrained | Requires Discord. Best for hero shots. |
+| **ChatGPT / DALL-E 4** | Complex compositions, iterative | Fast | High | Best multi-turn refinement. |
+| **Adobe Firefly** | Commercial-safe, Photoshop-native | Moderate | 2000px | Best if finishing in PS. Supports negative prompts. |
+
+---
+
+#### Prompt Best Practices by Generator
+
+---
+
+##### NanoBanana 2 (Gemini 3.1 Flash Image Preview)
+
+**Formula:**
+```
+[Camera angle + shot type] of [subject with specific details],
+[action/pose], [environment or background],
+illuminated by [lighting type and direction], creating [mood] atmosphere,
+[photography style], [what is NOT in the frame]
+```
+
+**What works:**
+- Narrative paragraphs, not keyword lists — describe the scene as a story
+- Photographic language: "85mm portrait lens", "shallow depth of field", "Rembrandt lighting"
+- Mood words: serene, contemplative, intimate, confident, editorial
+- Multi-turn refinement via follow-up prompts
+- Specify aspect ratio with `--ratio` flag (e.g., `--ratio 4:5`)
+
+**What to avoid:**
+- Keyword dumps without narrative context
+- Conflicting scene elements
+- Expecting exact color matching — describe mood/palette instead
+
+**Run command:**
+```bash
+python "D:\AI\Open Router API\generate.py" --prompt "..." --ratio "4:5" --name "[project-name]"
+```
+
+**Editorial skin health example:**
+```
+"A cinematic close-up of a woman's bare shoulder and collarbone, showing natural skin
+texture with subtle freckles and small moles. Soft directional light from the upper left
+creates gentle shadows that emphasize skin texture. The background is softly blurred warm
+neutral tones. Intimate, honest, confident mood — not clinical. No devices, no text,
+no props. Shot with 85mm portrait lens, shallow depth of field. Authentic, unretouched skin."
+```
+
+---
+
+##### FLUX (via HuggingFace MCP — `gr2_flux_2_klein_9b_infer`)
+
+**Formula:**
+```
+[Subject description], [action/pose], [environment], [lighting], [style modifiers], [mood]
+```
+
+**What works:**
+- Natural language sentences (not comma-heavy keyword lists)
+- Specific character details: age, skin tone, clothing, expression
+- Photography terms: "85mm lens", "f/2.8", "golden hour", "Rembrandt lighting"
+- Style modifiers: "editorial fashion style", "analog 35mm photography", "cinematic"
+- Hex colors for precise color accuracy (`#011640`)
+- Text rendering: wrap text in quotation marks e.g. `"text 'OPEN' in red neon"`
+
+**What to avoid:**
+- Negative prompts — not supported, will error
+- Prompt weights like `(word:1.5)` — use "with emphasis on" instead
+- Putting main subject at the end of a long prompt — it gets deprioritized
+- "White background" — causes blurry/undefined results in some variants
+- Too many conflicting ideas in one prompt
+
+**Parameters:**
+```python
+mode_choice="Base (50 steps)"  # higher quality
+guidance_scale=4               # for base mode
+width=816, height=1024         # ~4:5 ratio, must be multiple of 8
+prompt_upsampling=True         # auto-enhance prompt
+```
+
+**Editorial skin health example:**
+```
+"Close-up editorial portrait of a woman's neck and shoulder area, natural freckled skin
+with visible moles, soft directional natural light from the left, warm neutral blurred
+background, intimate and honest mood, premium health brand aesthetic, analog film
+photography style, unretouched skin texture, no devices no text no props,
+shallow depth of field"
+```
+
+---
+
+##### Midjourney v7
+
+**Formula:**
+```
+[Subject description], [action/pose], [camera technique], [lighting], [environment],
+[mood/style], [aspect ratio] --s [stylize] --style raw --v 7
+```
+
+**What works:**
+- Complete photography briefs, not keyword lists
+- Lens and camera specifics: "85mm portrait lens", "medium format film", "Kodak Portra"
+- Lighting specifics: "golden hour", "Rembrandt lighting", "directional window light"
+- `--style raw` for photorealism (minimal Midjourney stylization)
+- `--s 200-400` for balanced photorealism
+- `--ar 4:5` for portrait Instagram format
+
+**Parameters:**
+```
+--ar 4:5          portrait format
+--s 300           balanced photorealism (0=literal, 1000=artistic)
+--style raw       suppress Midjourney's default artistic styling
+--v 7             current version
+--c 0             consistent results (raise for variation)
+```
+
+**What to avoid:**
+- Keyword lists — v7 needs narrative context
+- Omitting `--ar` — will get unexpected dimensions
+- `--chaos` above 50 for controlled output
+- Conflicting styles in one prompt
+
+**Editorial skin health example:**
+```
+"Editorial portrait of a woman's bare shoulder and collarbone, natural skin with freckles
+and small moles clearly visible, soft directional light from upper left, warm neutral
+blurred background, intimate confident mood, not clinical, high-end health campaign
+photography, no devices no text no props, analog film aesthetic,
+shallow depth of field --ar 4:5 --s 300 --style raw --v 7"
+```
+
+---
+
+##### ChatGPT / DALL-E 4 (GPT-4o)
+
+**Formula:**
+```
+[Shot type] of [subject with details], [background/environment],
+[lighting style], [mood/atmosphere], [technical specs]
+```
+Write like you're emailing a designer — no special syntax needed.
+
+**What works:**
+- Specific, contextual descriptions over vague requests
+- Stating the image's purpose ("for a premium health brand campaign")
+- Photographic language: lens type, lighting style, depth of field
+- Multi-turn conversation for iteration — just say "make the background darker"
+- Complex compositions with many elements (handles 10-20 objects reliably)
+- Excellent text rendering — specify exact text in quotes
+- Hex colors: "use #0460d9 as the accent color"
+
+**What to avoid:**
+- Negative framing ("no cars") — state what you want instead
+- Very long chat histories (20-30+ messages) — performance degrades
+- Vague prompts that may trigger content refusals
+
+**No flags or parameters** — state aspect ratio and resolution in natural language.
+
+**Editorial skin health example:**
+```
+"A close-up editorial photograph of a woman's bare shoulder and collarbone for a premium
+skin health brand campaign. Natural skin texture with visible freckles and small moles —
+unretouched and authentic. Soft directional light from the upper left. Warm neutral
+blurred background. Intimate, honest, confident mood — not clinical. No devices, phone,
+or props in the frame. Shot with 85mm lens, shallow depth of field. 4:5 portrait format,
+high resolution."
+```
+
+---
+
+##### Adobe Firefly
+
+**Formula:**
+```
+[Shot type], [subject details], [action/pose], [environment],
+[lighting] lighting, [mood/aesthetic], [technical specs]
+```
+Describe the scene — avoid instruction words like "create", "make", "generate".
+
+**What works:**
+- Descriptive language without instruction verbs
+- Specific lighting terms: "Rembrandt lighting", "softbox", "natural window light"
+- Reference images for style steering — most effective input
+- Negative prompts supported: `Avoid: bad hands, extra fingers, low res, watermark`
+- Photography terms: "85mm portrait lens", "editorial", "cinematic"
+- Minimum 3 words — short prompts don't guide the model enough
+
+**What to avoid:**
+- Instruction words ("create", "make", "generate")
+- Complex text in the image — not reliable
+- Exceeding 2000×2000px — quality degrades
+- Very long prompts with Styles applied — Styles may get lost
+
+**Parameters:**
+- Use Style Reference images for maximum control over visual direction
+- Aspect ratio stated in prompt or via presets
+- Negative prompt: `Avoid: [list]`
+
+**Editorial skin health example:**
+```
+"Close-up editorial portrait of a woman's bare shoulder and collarbone area. Natural skin
+texture with subtle freckles and small moles visible, unretouched authentic appearance.
+Soft directional natural light from the upper left, gentle shadow on shoulder. Warm neutral
+softly blurred background. Intimate, confident, editorial health campaign aesthetic.
+85mm portrait lens, shallow depth of field. No devices, no text, no props in frame.
+Avoid: over-retouched skin, plastic appearance, clinical lighting, harsh shadows."
+```
+
+---
+
+#### Universal Prompt Anatomy (applies to all generators)
+
+Always include these 6 elements regardless of generator:
+
+```
+1. SUBJECT    — who/what + specific physical details
+2. CROP       — shot type (close-up, full-body, environmental)
+3. LIGHTING   — source + direction + quality (soft/hard)
+4. MOOD       — 2-3 adjectives that capture emotional register
+5. BACKGROUND — treatment (blurred, studio, environmental)
+6. EXCLUSIONS — what is explicitly NOT in the frame
+```
+
+**Option C — Manual / provided by user**
+> 💡 *Disclaimer: For pixel-perfect output that matches a specific visual direction, creating or sourcing the image manually in Photoshop, Canva, or another image editor remains the most reliable path. AI generation — regardless of tool — will require human finishing for production-level results.*
+- If user provides a file path: upload via temp HTTPS hosting (see Error Handling below)
+- If user provides an image URL: `upload-asset-from-url` directly
+
+#### Step 3: Upload to Canva
+
+After generation/sourcing:
+- If image URL (from FLUX or web): `upload-asset-from-url` directly
+- If local file (from NanoBanana or user): see **Local File Upload** in Error Handling
+- Note the returned `asset_id` — needed for `update_fill` or `insert_fill` in editing operations
+
+#### Step 4: Build Layout Around the Image
+
+Once the hero image is in Canva as an asset:
+1. Generate or use a simple base design (minimal template)
+2. `start-editing-transaction`
+3. `update_fill` to replace the background/hero image slot with the uploaded asset
+4. `resize_element` + `position_element` to achieve full-bleed or intended crop
+5. Update/reposition text elements for hierarchy
+6. `commit-editing-transaction`
+
+**For placeholder scenarios:** If imagery cannot be sourced, output a detailed image brief instead:
+```
+IMAGE BRIEF:
+Subject: [exact description]
+Lighting: [direction, quality]
+Mood: [3 adjectives]
+Background: [treatment]
+Aspect ratio: [W:H]
+Exclude: [what should not be in frame]
+Suggested generator: [tool + sample prompt]
+```
 
 ---
 
@@ -308,3 +579,41 @@ ALTERNATIVE: [what could have been done instead]
 1. Note the substitution explicitly in the Creative Decision Log
 2. Choose the closest available equivalent from Google Fonts
 3. Verify the substitute preserves the typographic personality from the brief
+
+**Local file upload to Canva (when `upload-asset-from-url` requires HTTPS):**
+Canva's upload tool rejects local file paths and `http://localhost` URLs. Use temp HTTPS hosting:
+```python
+import requests
+with open(r'path\to\image.png', 'rb') as f:
+    r = requests.post('https://litterbox.catbox.moe/resources/internals/api.php',
+        data={'reqtype': 'fileupload', 'time': '1h'},
+        files={'fileToUpload': f}, timeout=60)
+    print(r.text.strip())  # Returns HTTPS URL valid for 1 hour
+```
+Then use the returned URL with `upload-asset-from-url`.
+
+---
+
+## Phase 6: Devil's Advocate Review
+
+After design is committed and shared with the user, always run a final self-critique. This is not optional — it prevents the user from submitting work with obvious gaps.
+
+Structure the review as:
+
+```
+=== DEVIL'S ADVOCATE REVIEW ===
+
+WHAT WORKS:
+• [Specific element] — [Why it's effective]
+
+WHAT NEEDS FIXING BEFORE SUBMISSION:
+• [Issue] — [Why it matters + exact fix]
+
+CONCEPT DECISIONS THAT NEED AN ARGUMENT:
+• [Decision] — [Potential pushback + how to defend it]
+
+WHAT MANUAL FINISHING IS STILL REQUIRED:
+• [Element] — [Tool to use + estimated time]
+```
+
+Be honest. If the design has meaningful gaps between what was intended and what was achieved, say so clearly. The user is better served by knowing the gaps now than discovering them after submission.

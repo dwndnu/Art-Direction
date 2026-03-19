@@ -16,7 +16,8 @@ Activate this skill when the user invokes any of these commands:
 - `/creative deliver <email>`
 - `/creative inspect <canva-url>`
 - `/creative resize <canva-url> <format>`
-- `/creative image <prompt>` (FLUX image generation)
+- `/creative image <prompt>` (image generation — multi-generator)
+- `/creative review` (devil's advocate critique of current deliverable)
 
 ---
 
@@ -31,7 +32,8 @@ Activate this skill when the user invokes any of these commands:
 | `/creative deliver <email>` | Set sharing permissions + send via Gmail | Email sent confirmation |
 | `/creative inspect <canva-url>` | Analyze existing Canva design, give art direction notes | AD-NOTES-[ProjectName].md |
 | `/creative resize <canva-url> <format>` | Resize existing design to new format | Canva design link |
-| `/creative image <prompt>` | Generate standalone image via FLUX | Image URL + optional Canva upload |
+| `/creative image <prompt>` | Generate standalone image — offers multi-generator options with optimized prompts | Image file + optional Canva upload |
+| `/creative review` | Devil's advocate critique of current deliverable — gaps, missing elements, weak decisions | Written critique + fix list |
 
 ---
 
@@ -77,6 +79,67 @@ Route directly to the corresponding sub-skill:
 - `/creative refine` → `creative-refine/SKILL.md`
 - `/creative design` → `creative-design/SKILL.md`
 - `/creative deliver` → `creative-deliver/SKILL.md`
+- `/creative review` → Devil's Advocate Review (inline, no sub-skill)
+- `/creative image` → Image Generation Workflow (inline, no sub-skill)
+
+### Image Generation (`/creative image <prompt>`)
+
+**Do not auto-generate.** Always run the following flow:
+
+1. **Art direction first** — before touching any tool, articulate:
+   - What the image communicates (concept, not just subject)
+   - Subject + crop + composition
+   - Lighting quality and direction
+   - Mood (3 adjectives)
+   - Background treatment
+   - What is explicitly NOT in the frame
+
+2. **Offer generator options** — present to user, let them choose:
+
+   | Generator | Prompt style | Key syntax | Notes |
+   |-----------|-------------|------------|-------|
+   | **Canva AI** | Free-form | — | ⚠️ Non-deterministic. Exploration only, not precision. |
+   | **NanoBanana 2** | Narrative paragraphs | `--ratio 4:5 --name [project]` | Gemini 3.1 Flash via OpenRouter. Best photorealistic editorial. |
+   | **FLUX (HuggingFace)** | Natural language sentences | `guidance_scale=4, steps=50` | Built into this workflow. Max 1024px. |
+   | **Midjourney v7** | Photography briefs | `--ar 4:5 --s 300 --style raw --v 7` | Highest quality ceiling. Requires Discord. |
+   | **ChatGPT / DALL-E 4** | Conversational | State ratio in prompt | Best for iteration + complex compositions. |
+   | **Adobe Firefly** | Descriptive (no instruction verbs) | `Avoid: [negatives]` | Commercial-safe. Best if finishing in Photoshop. |
+   | **Manual** | — | — | 💡 For pixel-perfect results, Photoshop / Canva / Figma is most reliable. |
+
+   **Universal prompt anatomy:** `Subject + Crop + Lighting + Mood + Background + Exclusions`
+   Full prompt best practices + example prompts per generator → `creative-design/SKILL.md` Section 3.4
+
+3. **Write optimized prompt** for chosen generator — tailored to its prompt syntax
+4. **Generate + evaluate** — show result to user before proceeding
+5. **Upload to Canva** if needed (`upload-asset-from-url`; for local files use catbox.moe workaround — see `creative-design` error handling)
+6. Ask: "Use this in a design? [Y/N]"
+
+### Review (`/creative review`)
+
+Run after any deliverable is complete. This is a **mandatory self-critique** — not optional polish.
+
+Structure:
+
+```
+=== DEVIL'S ADVOCATE REVIEW ===
+
+WHAT WORKS:
+• [Element] — [Why it's genuinely effective]
+
+CRITICAL GAPS (fix before submission):
+• [Issue] — [Why it matters + exact fix required]
+
+CONCEPT DECISIONS THAT NEED AN ARGUMENT:
+• [Decision] — [Expected pushback + how to defend the choice]
+
+MANUAL FINISHING STILL REQUIRED:
+• [Element] — [Tool + estimated time]
+
+OVERALL VERDICT:
+[Honest 2-3 sentence assessment — is this ready to submit or not?]
+```
+
+Be direct. If there is a gap between what was intended and what was achieved, name it. The user is better served knowing the gaps now.
 
 ### Inspect (`/creative inspect <url>`)
 1. Extract design ID from URL using `resolve-shortlink` if needed
