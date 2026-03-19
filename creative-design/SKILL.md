@@ -72,8 +72,9 @@ IMAGERY: [description of image type needed]
 
 If the brief requires **custom photography, editorial imagery, or a hero visual** (not just icons or text):
 - Do NOT generate in Canva first — Canva AI cannot reliably execute specific art direction
-- Complete **Section 3.4 Steps 1 and 2** now (art direction concept + image generation/sourcing)
-- Return here after the hero image is confirmed, then continue to Phase 2
+- Go to **Section 3.4** now: complete Step 1 (art direction concept — autonomous), then Step 2 (present generator options to user and wait for their choice before generating)
+- This step requires user interaction — present the art direction + generator options, then pause for their input
+- Return here with confirmed hero image asset, then continue to Phase 2
 
 If imagery is generic/decorative (icons, abstract backgrounds, simple patterns):
 - Continue to Phase 2 — use Canva stock or AI generation inline
@@ -93,12 +94,13 @@ Before generating anything:
 
 ### 2.2 Template-First Approach (Preferred)
 
-**Before AI generation from scratch**, search for a relevant template:
-- Try `search-designs` with terms like "[design type] template" (e.g., "social post template", "presentation template")
-- If a suitable template exists: use it as the base, then use editing operations to customize colors, fonts, and copy
-- Starting from a template is more reliable and controllable than AI generation from scratch
+**Before AI generation from scratch**, check for a base design in the user's account:
+- Try `search-designs` with terms like the project/brand name or design type
+- ⚠️ `search-designs` searches the **user's own Canva designs only** — it does NOT access Canva's public template library. If no results, this means no relevant saved designs exist in the account, not that no templates exist in Canva.
+- If a suitable design exists: use it as the base, then use editing operations to customize colors, fonts, and copy
+- If no saved design exists: proceed to AI generation (Canva's template library is accessible through the UI but not via MCP — tell the user to open Canva and start from a template if they prefer, then bring the template ID back)
 
-**Only use AI generation when:** no suitable template exists, or the brief requires a highly specific visual concept that templates can't accommodate.
+**Only use AI generation when:** no suitable base design exists in the account, or the brief requires a highly specific visual concept.
 
 ### 2.3 AI Generation (When Template Not Available)
 

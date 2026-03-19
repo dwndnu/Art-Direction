@@ -102,14 +102,16 @@ If recipient type is unclear from context: default to "Client (external)" — mo
 
 ### 2.2 Compose the Email
 
-Generate 3 subject line options:
+Generate 3 subject line options and **ask the user to pick one before drafting the email body**:
 ```
 Option A: [Action-oriented] "[Project] Creative — Ready for Your Review"
 Option B: [Specific]       "[Project] — [Format] Design, [Date]"
 Option C: [Direct]         "Your [Project] design is here"
+
+Which subject line? [A / B / C / or suggest your own]
 ```
 
-**Email body structure:**
+**Email body structure** (draft after user confirms subject):
 
 ```
 [ONE-LINE OPENER — state exactly what this email is]
@@ -198,7 +200,7 @@ Do NOT say "sent" — it was not sent. Do NOT imply automatic sending is possibl
 Project: [name]
 Design: [canva shareable link]
 Exported as: [filename or "export URL: [url]"]
-Email: [sent to / draft saved for] [recipient]
+Email: Draft saved for [recipient]
 Subject: [subject line]
 Date: [YYYY-MM-DD HH:MM]
 

@@ -231,7 +231,7 @@ If a previous version exists (`-refine-v1.md`): create `-refine-v2.md`. Never ov
 
 ## Execution Path
 [How this refine brief gets executed:]
-- If source is Canva URL: /creative design CREATIVE-BRIEF-[ProjectName]-refine.md
+- If source is Canva URL: /creative design CREATIVE-BRIEF-[ProjectName]-refine-v1.md
   (design skill will load the existing Canva design and apply edits via editing operations)
 - If source is image file only: /creative design will recreate in Canva from scratch
   using the refine brief as direction and the image as visual reference

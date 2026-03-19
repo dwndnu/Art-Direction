@@ -70,7 +70,10 @@ Runs all phases **sequentially with confirmation gates**:
    - Input: reads `CREATIVE-BRIEF-[ProjectName].md` + creates `CREATIVE-STATE.md`
    - Output: Canva design link
    - **GATE: Show thumbnail + design link. Ask: "Proceed to delivery? [Y/N/revise]"**
-   - Do NOT send email without explicit approval.
+   - If **Y**: proceed to Phase 3
+   - If **N**: stop. Ask what direction to take instead.
+   - If **revise**: ask *"What specifically needs to change?"* → apply edits via editing transaction → re-show thumbnail → ask again
+   - Do NOT send email without explicit Y.
 
 3. **Phase 3** → Sub-skill: `creative-deliver`
    - Input: reads `CREATIVE-STATE.md` for design ID and project context
@@ -149,6 +152,7 @@ Be direct. If there is a gap between what was intended and what was achieved, na
 2. Use `get-design` to retrieve design metadata
 3. Use `get-design-content` to retrieve element structure
 4. Use `get-design-thumbnail` to get visual preview — **evaluate visually using the thumbnail image**
+   > ⚠️ *Thumbnail CDN limitation: if the URL redirects to an auth-gated page the Read tool cannot access, share the design URL with the user and ask them to open it in browser. Continue assessment using `get-design-content` for structural data.*
 5. Produce art direction notes structured as:
    - **What Works** (do not change)
    - **Critical Fixes** (must change for the design to function)
@@ -172,6 +176,8 @@ Be direct. If there is a gap between what was intended and what was achieved, na
 | Instagram Feed | 1080 × 1080 | 1:1 | Instagram |
 | Instagram Portrait | 1080 × 1350 | 4:5 | Instagram |
 | Instagram Stories | 1080 × 1920 | 9:16 | Instagram/Stories |
+| TikTok Video | 1080 × 1920 | 9:16 | TikTok |
+| TikTok Feed Image | 1080 × 1350 | 4:5 | TikTok |
 | Facebook Post | 1200 × 630 | ~2:1 | Facebook |
 | Facebook Banner | 851 × 315 | ~2.7:1 | Facebook |
 | LinkedIn Post | 1200 × 628 | ~2:1 | LinkedIn |
