@@ -20,6 +20,13 @@ Upon completion, write `CREATIVE-STATE.md` in the current directory for use by `
 
 **If `CREATIVE-BRIEF-[ProjectName].md` exists** → read it fully. Extract all parameters before touching Canva.
 
+**If the brief filename contains `-refine` (e.g., `CREATIVE-BRIEF-SkinVision-refine.md`):**
+- Switch to **edit-existing mode** — do NOT create a new design from scratch
+- Load the source Canva design from the brief's `Source Design` field via `get-design`
+- Use `start-editing-transaction` → `perform-editing-operations` → `commit-editing-transaction`
+- Only touch elements explicitly listed under "What We're Changing" — preserve everything under "What We're Keeping"
+- Minimize changes: surgical edits, not a rebuild
+
 **If no brief file exists** → ask the user for minimum required inputs:
 - Project name (used for file naming)
 - Format/dimensions (or select from Format Reference in orchestrator)
@@ -579,6 +586,9 @@ ALTERNATIVE: [what could have been done instead]
 1. Note the substitution explicitly in the Creative Decision Log
 2. Choose the closest available equivalent from Google Fonts
 3. Verify the substitute preserves the typographic personality from the brief
+
+**Thumbnail URL not readable (Canva CDN redirect to authenticated page):**
+`get-design-thumbnail` occasionally returns a URL that redirects to an auth-gated page — the Read tool returns an error or empty image. Workaround: share the design URL directly with the user and ask them to open it in browser for visual review. Continue workflow and rely on `get-design-content` for structural evaluation.
 
 **Local file upload to Canva (when `upload-asset-from-url` requires HTTPS):**
 Canva's upload tool rejects local file paths and `http://localhost` URLs. Use temp HTTPS hosting:

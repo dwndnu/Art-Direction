@@ -56,7 +56,7 @@ Categorize your references:
 - **2-3 Lateral references** — different category, transferable aesthetic. What principle translates.
 - **1-2 Anti-references** — what this should NOT look like. Name the cliché explicitly.
 
-**Note on image generation:** If the user wants a generated concept image to accompany the brief, use `gr1_flux_1_kontext_dev_infer` with a descriptive prompt matching the brief's visual direction. This can serve as a rough "concept visualization" — not final art, but direction-setting.
+**Note on image generation:** If the user wants a generated concept image to accompany the brief, offer the multi-generator options from `/creative image` (FLUX via HuggingFace MCP is the fastest built-in option; NanoBanana 2, Midjourney, ChatGPT, or Firefly for higher precision). This serves as a rough "concept visualization" — not final art, but direction-setting. Full generator comparison and prompt best practices → `creative-design/SKILL.md` Section 3.4.
 
 ---
 

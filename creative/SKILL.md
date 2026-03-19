@@ -160,12 +160,6 @@ Be direct. If there is a gap between what was intended and what was achieved, na
 5. After resize: use `get-design-thumbnail` to visually check the result
 6. Flag any composition issues — resize is never lossless
 
-### Image Generation (`/creative image <prompt>`)
-1. Use `gr1_flux_1_kontext_dev_infer` (preferred) or `gr2_flux_2_klein_9b_infer`
-2. Return the generated image URL to user
-3. Ask: "Upload this image to Canva for use in a design? [Y/N]"
-4. If yes: use `upload-asset-from-url` with the image URL
-
 ---
 
 ## Format Reference (px dimensions)
